@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 /*
- * Copyright (C) 2003-2014, 2018-2022 Intel Corporation
+ * Copyright (C) 2003-2014, 2018-2023 Intel Corporation
  * Copyright (C) 2015-2016 Intel Deutschland GmbH
  */
 #include <linux/delay.h>
@@ -275,7 +275,7 @@ static int iwl_dump_rfh(struct iwl_trans *trans, char **buf)
 		{ RFH_Q0_URBD_STTS_WPTR_LSB, true },
 	};
 
-#ifdef CONFIG_IWLWIFI_DEBUGFS
+#ifdef CPTCFG_IWLWIFI_DEBUGFS
 	if (buf) {
 		int pos = 0;
 		/*
@@ -371,7 +371,7 @@ int iwl_dump_fh(struct iwl_trans *trans, char **buf)
 	if (trans->trans_cfg->mq_rx_supported)
 		return iwl_dump_rfh(trans, buf);
 
-#ifdef CONFIG_IWLWIFI_DEBUGFS
+#ifdef CPTCFG_IWLWIFI_DEBUGFS
 	if (buf) {
 		int pos = 0;
 		size_t bufsz = ARRAY_SIZE(fh_tbl) * 48 + 40;
@@ -477,7 +477,8 @@ int iwl_finish_nic_init(struct iwl_trans *trans)
 	 * device-internal resources is supported, e.g. iwl_write_prph()
 	 * and accesses to uCode SRAM.
 	 */
-	err = iwl_poll_bit(trans, CSR_GP_CNTRL, poll_ready, poll_ready, 25000);
+	err = iwl_poll_bit(trans, CSR_GP_CNTRL, poll_ready, poll_ready,
+			   25000 * CPTCFG_IWL_TIMEOUT_FACTOR);
 	if (err < 0) {
 		IWL_DEBUG_INFO(trans, "Failed to wake NIC\n");
 

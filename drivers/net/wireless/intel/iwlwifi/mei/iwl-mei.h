@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
- * Copyright (C) 2021 - 2022 Intel Corporation
+ * Copyright (C) 2021-2023 Intel Corporation
  */
 
 #ifndef __iwl_mei_h__
@@ -307,7 +307,7 @@ struct iwl_mei_ops {
 	void (*nic_stolen)(void *priv);
 };
 
-#if IS_ENABLED(CONFIG_IWLMEI)
+#if IS_ENABLED(CPTCFG_IWLMEI)
 
 /**
  * iwl_mei_is_connected() - is the connection to the CSME firmware established?
@@ -493,7 +493,7 @@ static inline void iwl_mei_set_power_limit(__le16 *power_limit)
 
 static inline int iwl_mei_register(void *priv,
 				   const struct iwl_mei_ops *ops)
-{ return 0; }
+{ return -EOPNOTSUPP; }
 
 static inline void iwl_mei_start_unregister(void)
 {}
@@ -524,6 +524,6 @@ static inline int iwl_mei_pldr_req(void)
 static inline void iwl_mei_alive_notif(bool success)
 {}
 
-#endif /* CONFIG_IWLMEI */
+#endif /* CPTCFG_IWLMEI */
 
 #endif /* __iwl_mei_h__ */

@@ -197,6 +197,7 @@
 #define SCD_QUEUE_CTX_REG2_VAL(_n, _v)		FIELD_PREP(SCD_QUEUE_CTX_REG2_ ## _n, _v)
 
 #define SCD_GP_CTRL_ENABLE_31_QUEUES		BIT(0)
+#define SCD_GP_CTRL_DRAM_BC_TABLE_DUP_DIS	BIT(16)
 #define SCD_GP_CTRL_AUTO_ACTIVE_MODE		BIT(18)
 
 /* Context Data */
@@ -231,6 +232,7 @@
 #define SCD_CHAINEXT_EN		(SCD_BASE + 0x244)
 #define SCD_AGGR_SEL		(SCD_BASE + 0x248)
 #define SCD_INTERRUPT_MASK	(SCD_BASE + 0x108)
+#define SCD_CB_SIZE		(SCD_BASE + 0x1a4)
 #define SCD_GP_CTRL		(SCD_BASE + 0x1a8)
 #define SCD_EN_CTRL		(SCD_BASE + 0x254)
 
@@ -348,8 +350,8 @@
 #define RFIC_REG_RD			0xAD0470
 #define WFPM_CTRL_REG			0xA03030
 #define WFPM_OTP_CFG1_ADDR		0x00a03098
-#define WFPM_OTP_CFG1_IS_JACKET_BIT	BIT(4)
-#define WFPM_OTP_CFG1_IS_CDB_BIT	BIT(5)
+#define WFPM_OTP_CFG1_IS_JACKET_BIT	BIT(5)
+#define WFPM_OTP_CFG1_IS_CDB_BIT	BIT(4)
 #define WFPM_OTP_BZ_BNJ_JACKET_BIT	5
 #define WFPM_OTP_BZ_BNJ_CDB_BIT		4
 #define WFPM_OTP_CFG1_IS_JACKET(_val)   (((_val) & 0x00000020) >> WFPM_OTP_BZ_BNJ_JACKET_BIT)
@@ -365,7 +367,6 @@
 #define DBGI_SRAM_FIFO_POINTERS_WR_PTR_MSK		0x00000FFF
 
 enum {
-	ENABLE_WFPM = BIT(31),
 	WFPM_AUX_CTL_AUX_IF_MAC_OWNER_MSK	= 0x80000000,
 };
 
@@ -382,8 +383,11 @@ enum {
 /* device family 22000 WPROT register */
 #define PREG_PRPH_WPROT_22000		0xA04D00
 
+#define SB_CFG_OVERRIDE_ADDR		0xA26C78
+#define SB_CFG_OVERRIDE_ENABLE		0x8000
+#define SB_CFG_BASE_OVERRIDE		0xA20000
 #define SB_MODIFY_CFG_FLAG		0xA03088
-#define SB_CFG_RESIDES_IN_OTP_MASK	0x10
+#define SB_CFG_RESIDES_IN_ROM		0x80
 #define SB_CPU_1_STATUS			0xA01E30
 #define SB_CPU_2_STATUS			0xA01E34
 #define UMAG_SB_CPU_1_STATUS		0xA038C0
@@ -411,12 +415,6 @@ enum {
 	LMPM_CHICK_EXTENDED_ADDR_SPACE = BIT(0),
 };
 
-/* FW chicken bits */
-#define LMPM_PAGE_PASS_NOTIF			0xA03824
-enum {
-	LMPM_PAGE_PASS_NOTIF_POS = BIT(20),
-};
-
 /*
  * CRF ID register
  *
@@ -424,21 +422,22 @@ enum {
  * reserved: bits 12-18
  * slave_exist: bit 19
  * dash: bits 20-23
- * step: bits 24-26
- * flavor: bits 27-31
+ * step: bits 24-27
+ * flavor: bits 28-31
  */
 #define REG_CRF_ID_TYPE(val)		(((val) & 0x00000FFF) >> 0)
 #define REG_CRF_ID_SLAVE(val)		(((val) & 0x00080000) >> 19)
 #define REG_CRF_ID_DASH(val)		(((val) & 0x00F00000) >> 20)
-#define REG_CRF_ID_STEP(val)		(((val) & 0x07000000) >> 24)
-#define REG_CRF_ID_FLAVOR(val)		(((val) & 0xF8000000) >> 27)
+#define REG_CRF_ID_STEP(val)		(((val) & 0x0F000000) >> 24)
+#define REG_CRF_ID_FLAVOR(val)		(((val) & 0xF0000000) >> 28)
+
 
 #define UREG_CHICK		(0xA05C00)
 #define UREG_CHICK_MSI_ENABLE	BIT(24)
 #define UREG_CHICK_MSIX_ENABLE	BIT(25)
 
-#define SD_REG_VER		0xa29600
-#define SD_REG_VER_GEN2		0x00a2b800
+#define SD_REG_VER	0xa29600
+#define SD_REG_VER_GEN2	0x00a2b800
 
 #define REG_CRF_ID_TYPE_JF_1			0x201
 #define REG_CRF_ID_TYPE_JF_2			0x202
@@ -452,6 +451,7 @@ enum {
 #define REG_CRF_ID_TYPE_FM			0x910
 #define REG_CRF_ID_TYPE_FMI			0x930
 #define REG_CRF_ID_TYPE_FMR			0x900
+#define REG_CRF_ID_TYPE_WHP			0xA10
 
 #define HPM_DEBUG			0xA03440
 #define PERSISTENCE_BIT			BIT(12)
