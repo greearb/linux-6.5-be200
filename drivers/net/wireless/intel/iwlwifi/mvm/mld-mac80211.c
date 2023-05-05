@@ -92,7 +92,7 @@ static int iwl_mvm_mld_mac_add_interface(struct ieee80211_hw *hw,
 		mvm->csme_vif = vif;
 	}
 
-#ifdef CPTCFG_IWLWIFI_SUPPORT_DEBUG_OVERRIDES
+#ifdef CONFIG_IWLWIFI_SUPPORT_DEBUG_OVERRIDES
 	if (vif->type == NL80211_IFTYPE_STATION &&
 	    mvm->trans->dbg_cfg.disable_eml)
 		vif->driver_flags |= IEEE80211_VIF_DISABLE_EML;
@@ -162,7 +162,7 @@ static void iwl_mvm_mld_mac_remove_interface(struct ieee80211_hw *hw,
 	 */
 	if (vif->type == NL80211_IFTYPE_AP ||
 	    vif->type == NL80211_IFTYPE_ADHOC) {
-#ifdef CPTCFG_NL80211_TESTMODE
+#ifdef CONFIG_NL80211_TESTMODE
 		if (vif == mvm->noa_vif) {
 			mvm->noa_vif = NULL;
 			mvm->noa_duration = 0;
@@ -170,7 +170,7 @@ static void iwl_mvm_mld_mac_remove_interface(struct ieee80211_hw *hw,
 #endif
 	}
 
-#ifdef CPTCFG_IWLMVM_P2P_OPPPS_TEST_WA
+#ifdef CONFIG_IWLMVM_P2P_OPPPS_TEST_WA
 	if (mvmvif == mvm->p2p_opps_test_wa_vif)
 		mvm->p2p_opps_test_wa_vif = NULL;
 #endif
@@ -207,9 +207,9 @@ static void iwl_mvm_mld_mac_remove_interface(struct ieee80211_hw *hw,
 		__clear_bit(IEEE80211_HW_RX_INCLUDES_FCS, mvm->hw->flags);
 	}
 
-#ifdef CPTCFG_IWLMVM_TDLS_PEER_CACHE
+#ifdef CONFIG_IWLMVM_TDLS_PEER_CACHE
 	iwl_mvm_tdls_peer_cache_clear(mvm, vif);
-#endif /* CPTCFG_IWLMVM_TDLS_PEER_CACHE */
+#endif /* CONFIG_IWLMVM_TDLS_PEER_CACHE */
 
 out:
 	mutex_unlock(&mvm->mutex);
@@ -242,7 +242,7 @@ static int iwl_mvm_esr_mode_active(struct iwl_mvm *mvm,
 
 	/* Indicate to mac80211 that EML is enabled */
 	vif->driver_flags |= IEEE80211_VIF_EML_ACTIVE;
-#ifdef CPTCFG_IWLWIFI_DEBUGFS
+#ifdef CONFIG_IWLWIFI_DEBUGFS
 	/* Disable RLC overriding by user */
 	mvm->dbgfs_rx_phyinfo = 0;
 #endif
@@ -859,7 +859,7 @@ static void iwl_mvm_mld_vif_cfg_changed_station(struct iwl_mvm *mvm,
 
 	if (changes & BSS_CHANGED_ASSOC) {
 		if (vif->cfg.assoc) {
-#ifdef CPTCFG_IWLWIFI_DEBUG_SESSION_PROT_FAIL
+#ifdef CONFIG_IWLWIFI_DEBUG_SESSION_PROT_FAIL
 			iwl_debug_session_prot(false);
 #endif
 			/* clear statistics to get clean beacon counter */
@@ -1343,7 +1343,7 @@ const struct ieee80211_ops iwl_mvm_mld_hw_ops = {
 	.stop_nan = iwl_mvm_stop_nan,
 	.add_nan_func = iwl_mvm_add_nan_func,
 	.del_nan_func = iwl_mvm_del_nan_func,
-#ifdef CPTCFG_IWLWIFI_DEBUGFS
+#ifdef CONFIG_IWLWIFI_DEBUGFS
 	.vif_add_debugfs = iwl_mvm_vif_add_debugfs,
 	.link_add_debugfs = iwl_mvm_link_add_debugfs,
 	.link_sta_add_debugfs = iwl_mvm_link_sta_add_debugfs,
