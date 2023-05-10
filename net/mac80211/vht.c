@@ -146,7 +146,6 @@ ieee80211_vht_cap_ie_to_sta_vht_cap(struct ieee80211_sub_if_data *sdata,
 	struct ieee80211_sta_vht_cap own_cap;
 	u32 cap_info, i;
 	u32 mpdu_len;
-	struct ieee80211_local *local = sdata->local;
 
 	memset(vht_cap, 0, sizeof(*vht_cap));
 
