@@ -842,6 +842,42 @@ static void mt7915_bss_info_changed(struct ieee80211_hw *hw,
 			mt7915_update_mu_group(hw, vif, info);
 	}
 
+	if (set_bss_info == 0)
+		mt7915_mcu_add_bss_info(phy, vif, false);
+	if (set_sta == 0)
+		mt7915_mcu_add_sta(dev, vif, NULL, false);
+
+	mutex_unlock(&dev->mt76.mutex);
+}
+
+static int
+mt7915_start_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+		struct ieee80211_bss_conf *link_conf)
+{
+	struct mt7915_phy *phy = mt7915_hw_phy(hw);
+	struct mt7915_dev *dev = mt7915_hw_dev(hw);
+	int err;
+
+	mutex_lock(&dev->mt76.mutex);
+
+	err = mt7915_mcu_add_bss_info(phy, vif, true);
+	if (err)
+		goto out;
+	err = mt7915_mcu_add_sta(dev, vif, NULL, true);
+out:
+	mutex_unlock(&dev->mt76.mutex);
+
+	return err;
+}
+
+static void
+mt7915_stop_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+	       struct ieee80211_bss_conf *link_conf)
+{
+	struct mt7915_dev *dev = mt7915_hw_dev(hw);
+
+	mutex_lock(&dev->mt76.mutex);
+	mt7915_mcu_add_sta(dev, vif, NULL, false);
 	mutex_unlock(&dev->mt76.mutex);
 }
 
