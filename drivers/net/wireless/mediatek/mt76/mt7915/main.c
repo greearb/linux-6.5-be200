@@ -907,57 +907,6 @@ mt7915_stop_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 }
 
 static void
-mt7915_vif_check_caps(struct mt7915_phy *phy, struct ieee80211_vif *vif)
-{
-	struct mt7915_vif *mvif = (struct mt7915_vif *)vif->drv_priv;
-	struct mt7915_vif_cap *vc = &mvif->cap;
-
-	vc->ht_ldpc = vif->bss_conf.ht_ldpc;
-	vc->vht_ldpc = vif->bss_conf.vht_ldpc;
-	vc->vht_su_ebfer = vif->bss_conf.vht_su_beamformer;
-	vc->vht_su_ebfee = vif->bss_conf.vht_su_beamformee;
-	vc->vht_mu_ebfer = vif->bss_conf.vht_mu_beamformer;
-	vc->vht_mu_ebfee = vif->bss_conf.vht_mu_beamformee;
-	vc->he_ldpc = vif->bss_conf.he_ldpc;
-	vc->he_su_ebfer = vif->bss_conf.he_su_beamformer;
-	vc->he_su_ebfee = vif->bss_conf.he_su_beamformee;
-	vc->he_mu_ebfer = vif->bss_conf.he_mu_beamformer;
-}
-
-static int
-mt7915_start_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
-		struct ieee80211_bss_conf *link_conf)
-{
-	struct mt7915_phy *phy = mt7915_hw_phy(hw);
-	struct mt7915_dev *dev = mt7915_hw_dev(hw);
-	int err;
-
-	mutex_lock(&dev->mt76.mutex);
-
-	mt7915_vif_check_caps(phy, vif);
-
-	err = mt7915_mcu_add_bss_info(phy, vif, true);
-	if (err)
-		goto out;
-	err = mt7915_mcu_add_sta(dev, vif, NULL, true);
-out:
-	mutex_unlock(&dev->mt76.mutex);
-
-	return err;
-}
-
-static void
-mt7915_stop_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
-	       struct ieee80211_bss_conf *link_conf)
-{
-	struct mt7915_dev *dev = mt7915_hw_dev(hw);
-
-	mutex_lock(&dev->mt76.mutex);
-	mt7915_mcu_add_sta(dev, vif, NULL, false);
-	mutex_unlock(&dev->mt76.mutex);
-}
-
-static void
 mt7915_channel_switch_beacon(struct ieee80211_hw *hw,
 			     struct ieee80211_vif *vif,
 			     struct cfg80211_chan_def *chandef)
