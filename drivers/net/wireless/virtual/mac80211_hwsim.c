@@ -5681,7 +5681,7 @@ static int hwsim_cloned_frame_received_nl(struct sk_buff *skb_2,
 		if (net_ratelimit())
 			printk(KERN_DEBUG " hwsim rx-nl: data lenth error: %d  max: %d\n",
 			       frame_data_len, IEEE80211_MAX_DATA_LEN);
-		goto err;
+		goto out;
 	}
 
 	/* Allocate new skb here */
