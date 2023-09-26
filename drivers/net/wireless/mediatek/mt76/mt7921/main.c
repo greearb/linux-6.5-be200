@@ -1407,6 +1407,9 @@ mt7921_hw_scan(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	err = mt76_connac_mcu_hw_scan(mphy, vif, req);
 	mt7921_mutex_release(dev);
 
+	if (err)
+		dev_err(dev->mt76.dev, "hw-scan failed: %d", err);
+
 	return err;
 }
 
