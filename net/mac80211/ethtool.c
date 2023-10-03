@@ -96,6 +96,7 @@ static void ieee80211_get_stats2(struct net_device *dev,
 	struct ieee80211_local *local = sdata->local;
 	struct station_info sinfo;
 	struct survey_info survey;
+	struct ieee80211_link_data *link;
 	int i, q;
 	int z;
 #define STA_STATS_SURVEY_LEN 7
@@ -127,6 +128,12 @@ static void ieee80211_get_stats2(struct net_device *dev,
 
 	if (sdata->vif.type == NL80211_IFTYPE_STATION) {
 		sta = sta_info_get_bss(sdata, sdata->deflink.u.mgd.bssid);
+
+		if (!sta) {
+			link = sdata_dereference(sdata->link[0], sdata);
+			if (link)
+				sta = sta_info_get_bss(sdata, link->u.mgd.bssid);
+		}
 
 		if (!(sta && !WARN_ON(sta->sdata->dev != dev)))
 			goto do_survey;
