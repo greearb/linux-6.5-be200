@@ -96,7 +96,7 @@ static void ieee80211_get_stats2(struct net_device *dev,
 	struct ieee80211_local *local = sdata->local;
 	struct station_info sinfo;
 	struct survey_info survey;
-	struct ieee80211_link_data *link;
+	struct ieee80211_link_data *link = NULL;
 	int i, q;
 	int z;
 #define STA_STATS_SURVEY_LEN 7
@@ -310,6 +310,8 @@ do_survey:
 	chanctx_conf = rcu_dereference(sdata->vif.bss_conf.chanctx_conf);
 	if (chanctx_conf)
 		channel = chanctx_conf->def.chan;
+	else if (link)
+		channel = link->conf->chandef.chan;
 	else
 		channel = NULL;
 	rcu_read_unlock();
