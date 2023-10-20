@@ -127,7 +127,7 @@ static void ieee80211_get_stats2(struct net_device *dev,
 	mutex_lock(&local->sta_mtx);
 
 	if (sdata->vif.type == NL80211_IFTYPE_STATION) {
-		sta = sta_info_get_bss(sdata, sdata->deflink.u.mgd.bssid);
+		sta = ieee80211_find_best_sta_link(sdata, &link);
 
 		if (!sta) {
 			link = sdata_dereference(sdata->link[0], sdata);
@@ -308,7 +308,9 @@ do_survey:
 
 	rcu_read_lock();
 	chanctx_conf = rcu_dereference(sdata->vif.bss_conf.chanctx_conf);
-	if (chanctx_conf)
+	if (link)
+		channel = link->conf->chandef.chan;
+	else if (chanctx_conf)
 		channel = chanctx_conf->def.chan;
 	else if (link)
 		channel = link->conf->chandef.chan;
