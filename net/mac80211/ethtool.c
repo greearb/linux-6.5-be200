@@ -127,7 +127,9 @@ static void ieee80211_get_stats2(struct net_device *dev,
 	mutex_lock(&local->sta_mtx);
 
 	if (sdata->vif.type == NL80211_IFTYPE_STATION) {
+		rcu_read_lock();
 		sta = ieee80211_find_best_sta_link(sdata, &link);
+		rcu_read_unlock();
 
 		if (!sta) {
 			link = sdata_dereference(sdata->link[0], sdata);
