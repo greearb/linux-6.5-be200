@@ -145,7 +145,7 @@ ieee80211_find_best_sta_link(struct ieee80211_sub_if_data *sdata,
 			continue;
 
 		/* we have two potential best links, find one we like best. */
-		if (sta1->sta_state > best_sta->sta_state) {
+		if (!best_sta || sta1->sta_state > best_sta->sta_state) {
 			sta1_better = true;
 		} else if (sta1->sta_state == best_sta->sta_state) {
 			u32 freq_best = 0;
