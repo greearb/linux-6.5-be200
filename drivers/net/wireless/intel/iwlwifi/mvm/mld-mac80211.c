@@ -242,14 +242,12 @@ static int iwl_mvm_esr_mode_active(struct iwl_mvm *mvm,
 
 	mvmvif->esr_active = true;
 
-<<<<<<< HEAD
+#define IEEE80211_VIF_EML_ACTIVE 0xBAD
+        // TODO:  Fixme when updating to new kernel.
+        //vif->driver_flags |= IEEE80211_VIF_EML_ACTIVE;
 	/* Indicate to mac80211 that EML is enabled */
-	vif->driver_flags |= IEEE80211_VIF_EML_ACTIVE;
-=======
-	/* Disable SMPS overrideing by user */
 	vif->driver_flags |= IEEE80211_VIF_DISABLE_SMPS_OVERRIDE;
 
->>>>>>> 818fcf97cd6f (iwlwifi: Improve make files for in-kernel build.)
 #ifdef CONFIG_IWLWIFI_DEBUGFS
 	/* Disable RLC overriding by user */
 	mvm->dbgfs_rx_phyinfo = 0;
@@ -800,8 +798,10 @@ static void iwl_mvm_mld_link_info_changed_station(struct iwl_mvm *mvm,
 	if (ret)
 		IWL_ERR(mvm, "failed to update MAC %pM\n", vif->addr);
 
-	if (changes & BSS_CHANGED_MLD_VALID_LINKS)
-		iwl_mvm_mld_select_links(mvm, vif, true);
+#define BSS_CHANGED_MLD_VALID_LINKS 0xBAD
+        // TODO:  Fixme BEN
+        //if (changes & BSS_CHANGED_MLD_VALID_LINKS)
+        //      iwl_mvm_mld_select_links(mvm, vif, true);
 
 	memcpy(mvmvif->link[link_conf->link_id]->bssid, link_conf->bssid,
 	       ETH_ALEN);
@@ -1358,7 +1358,7 @@ const struct ieee80211_ops iwl_mvm_mld_hw_ops = {
 	.add_nan_func = iwl_mvm_add_nan_func,
 	.del_nan_func = iwl_mvm_del_nan_func,
 #ifdef CONFIG_IWLWIFI_DEBUGFS
-	.vif_add_debugfs = iwl_mvm_vif_add_debugfs,
+	// TODO:  Fixme BEN .vif_add_debugfs = iwl_mvm_vif_add_debugfs,
 	.link_add_debugfs = iwl_mvm_link_add_debugfs,
 	.link_sta_add_debugfs = iwl_mvm_link_sta_add_debugfs,
 #endif

@@ -4259,7 +4259,9 @@ void iwl_mvm_mac_mgd_prepare_tx(struct ieee80211_hw *hw,
 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
 
 	mutex_lock(&mvm->mutex);
-	iwl_mvm_protect_assoc(mvm, vif, info->duration, info->link_id);
+	iwl_mvm_protect_assoc(mvm, vif, info->duration, 0);
+	// TODO:// TODO:  Fix when moving to newer kernel.
+        //iwl_mvm_protect_assoc(mvm, vif, info->duration, info->link_id);
 	mutex_unlock(&mvm->mutex);
 }
 
@@ -6833,7 +6835,7 @@ const struct ieee80211_ops iwl_mvm_hw_ops = {
 
 	.can_aggregate_in_amsdu = iwl_mvm_mac_can_aggregate,
 #ifdef CONFIG_IWLWIFI_DEBUGFS
-	.vif_add_debugfs = iwl_mvm_vif_add_debugfs,
+	// TODO:  Fixme when updating .vif_add_debugfs = iwl_mvm_vif_add_debugfs,
 	.link_sta_add_debugfs = iwl_mvm_link_sta_add_debugfs,
 #endif
 	.set_hw_timestamp = iwl_mvm_set_hw_timestamp,

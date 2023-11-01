@@ -144,11 +144,12 @@ void iwl_mvm_recalc_tdls_state(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
 }
 
 void iwl_mvm_mac_mgd_protect_tdls_discover(struct ieee80211_hw *hw,
-					   struct ieee80211_vif *vif,
-					   unsigned int link_id)
+					   struct ieee80211_vif *vif)
+// TODO:  FIXME unsigned int link_id)
 {
 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
 	u32 duration = 2 * vif->bss_conf.dtim_period * vif->bss_conf.beacon_int;
+	unsigned int link_id = 0;
 
 	/* Protect the session to hear the TDLS setup response on the channel */
 	mutex_lock(&mvm->mutex);
