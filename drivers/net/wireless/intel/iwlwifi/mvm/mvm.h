@@ -1357,6 +1357,10 @@ struct iwl_mvm {
 	bool rfi_wlan_master;
 	bool force_enable_rfi;
 	bool statistics_clear;
+
+#define IWL_MVM_BLOCK_TX 0x1
+#define IWL_MVM_BLOCK_RX 0x2
+	u8 block_traffic;
 };
 
 /* Extract MVM priv from op_mode and _hw */
